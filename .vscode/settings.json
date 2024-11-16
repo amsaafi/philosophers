@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*html": "html",
+        "*.html": "html",
+        "philosophers.h": "c"
+    }
+}
