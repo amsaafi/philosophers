@@ -1,47 +1,17 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <sys/time.h>
-#include <unistd.h>
-#include <string.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: samsaafi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/16 13:51:33 by samsaafi          #+#    #+#             */
+/*   Updated: 2024/11/18 18:31:31 by samsaafi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-typedef struct s_fork
-{
-    pthread_mutex_t mutex;
-} t_fork;
+#include "philo.h"
 
-typedef struct s_philo
-{
-    int             id;
-    int             left_fork;
-    int             right_fork;
-    int             times_eaten;
-    long long       last_meal;
-    pthread_t       thread;
-    struct s_data   *data;
-} t_philo;
-
-typedef struct s_data
-{
-    int             num_philos;
-    int             time_to_die;
-    int             time_to_eat;
-    int             time_to_sleep;
-    int             must_eat_count;
-    int             someone_died;
-    long long       start_time;
-    t_fork          *forks;
-    t_philo         *philos;
-    pthread_mutex_t print_mutex;
-} t_data;
-
-long long get_time(void)
-{
-    struct timeval tv;
-    
-    gettimeofday(&tv, NULL);
-    return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
-}
 
 void print_status(t_data *data, int id, char *status)
 {
@@ -132,12 +102,12 @@ void monitor_philos(t_data *data)
 
 int init_data(t_data *data, int argc, char **argv)
 {
-    memset(data, 0, sizeof(t_data));
-    data->num_philos = atoi(argv[1]);
-    data->time_to_die = atoi(argv[2]);
-    data->time_to_eat = atoi(argv[3]);
-    data->time_to_sleep = atoi(argv[4]);
-    data->must_eat_count = (argc == 6) ? atoi(argv[5]) : -1;
+    ft_memset(data, 0, sizeof(t_data));
+    data->num_philos = ft_atoi(argv[1]);
+    data->time_to_die = ft_atoi(argv[2]);
+    data->time_to_eat = ft_atoi(argv[3]);
+    data->time_to_sleep = ft_atoi(argv[4]);
+    data->must_eat_count = (argc == 6) ? ft_atoi(argv[5]) : -1;
     data->someone_died = 0;
     data->start_time = get_time();
     
@@ -231,6 +201,9 @@ int main(int argc, char **argv)
                " time_to_sleep [number_of_times_each_philosopher_must_eat]\n", argv[0]);
         return 1;
     }
+    
+    if (parse_args(argc, argv))
+        return 1;
     
     if (init_data(&data, argc, argv) || init_forks(&data) || 
         init_philos(&data) || start_simulation(&data))
