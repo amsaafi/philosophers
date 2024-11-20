@@ -5,59 +5,42 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: samsaafi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/18 15:26:51 by samsaafi          #+#    #+#             */
-/*   Updated: 2024/11/18 15:32:24 by samsaafi         ###   ########.fr       */
+/*   Created: 2024/11/20 12:37:48 by samsaafi          #+#    #+#             */
+/*   Updated: 2024/11/20 12:41:11 by samsaafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*ft_memset(void *ptr, int value, size_t num)
+size_t	get_timestamp(void)
 {
-	unsigned char	*byte_ptr;
-	size_t			i;
+	struct timeval	time_val;
 
-	byte_ptr = (unsigned char *)ptr;
-	i = 0;
-	while (i < num)
-	{
-		byte_ptr[i] = (unsigned char)value;
-		i++;
-	}
-	return (ptr);
+	if (gettimeofday(&time_val, NULL) == -1)
+		write(2, "gettimeofday() error\n", 22);
+	return (time_val.tv_sec * 1000 + time_val.tv_usec / 1000);
 }
 
-long long get_time(void)
+// Custom atoi function
+int	string_to_int(const char *str)
 {
-    struct timeval tv;
-    
-    gettimeofday(&tv, NULL);
-    return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
-}
+	int	res;
+	int	sign;
+	int	i;
 
-int	ft_atoi(const char *nptr)
-{
-	size_t	i;
-	int		sign;
-	int		num;
-
-	i = 0;
+	res = 0;
 	sign = 1;
-	while ((nptr[i] >= 9 && nptr[i] <= 13) || (nptr[i]) == 32)
+	i = 0;
+	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
 		i++;
-	if (nptr[i] == '-' || nptr[i] == '+')
+	if (str[i] == '-')
 	{
-		if (nptr[i] == '-')
-			sign *= -1;
+		sign = -1;
 		i++;
 	}
-	num = 0;
-	while (nptr[i] >= '0' && nptr[i] <= '9')
-	{
-		num = num * 10;
-		num = num + nptr[i] - '0';
+	else if (str[i] == '+')
 		i++;
-	}
-	return (num * sign);
+	while (str[i] >= '0' && str[i] <= '9')
+		res = (res * 10) + (str[i++] - '0');
+	return (res * sign);
 }
-

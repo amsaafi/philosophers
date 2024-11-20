@@ -6,30 +6,30 @@
 #    By: samsaafi <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/18 19:49:54 by samsaafi          #+#    #+#              #
-#    Updated: 2024/11/18 20:08:48 by samsaafi         ###   ########.fr        #
+#    Updated: 2024/11/20 14:29:21 by samsaafi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-Compiler = cc
-CFLAGS = -Wall -Wextra -Werror
 NAME = philo
 
-INC = parse.c \
-		philo.c \
-		utils.c \
+CC = cc
+CFLAGS = -Wall -Wextra -Werror
 
-OBJ = $(INC:.c=.o)
-
+SRCS = parse.c utils.c philo.c init.c actions.c philo_utils.c
+OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	$(CC) $(OBJ) -o $(NAME)
+$(NAME): $(OBJS)
+	$(CC) $(OBJS) $(LDFLAGS) -o $(NAME)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(OBJ)
+	rm -f $(OBJS)
 
 fclean: clean
-	rm -rf $(NAME)
+	rm -f $(NAME)
 
 re: fclean all
